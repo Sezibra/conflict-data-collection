@@ -47,7 +47,7 @@ This project teaches three complementary collection methods (REST APIs, BigQuery
 
 | Dataset | Collection Method | Records | Role |
 |---------|------------------|---------|------|
-| UCDP GED v25.1 | Reference dataset (Project 1) | 1,764 events | Ground truth: actual violence in Ethiopia |
+| UCDP GED v25.1 | Reference dataset ([Project 1](https://github.com/Sezibra/conflict-event-analysis)) | 1,764 events | Ground truth: actual violence in Ethiopia |
 | GDELT v2 | Google BigQuery SQL | 30,601 events (after dedup) | Media-reported conflict events |
 | ReliefWeb | REST API pipeline | Pending (appname approval) | UN/NGO humanitarian reports |
 | ReliefWeb | Web scraping (BeautifulSoup) | 20 listings | Demonstration of scraping skill |
