@@ -20,7 +20,7 @@
 
 ## Motivation
 
-Projects 1 through 7 in this portfolio all started from existing, pre-compiled datasets: UCDP GED, UN documents, ACLED, Google Earth Engine imagery. None demonstrated the ability to collect raw data from digital sources. Data collection is a foundational CSS skill. Salganik's "Bit by Bit" (2017) dedicates its second chapter to observing behavior through digital traces. Jungherr's Introduction to CSS syllabus covers digital traces before methods like text analysis or network analysis. The reason is simple: if you cannot collect your own data, you are limited to datasets other people built.
+Projects [1](https://github.com/Sezibra/conflict-event-analysis) through [7](https://github.com/Sezibra/conflict-abm-simulation) in this portfolio all started from existing, pre-compiled datasets: UCDP GED, UN documents, ACLED, Google Earth Engine imagery. None demonstrated the ability to collect raw data from digital sources. Data collection is a foundational CSS skill. Salganik's "Bit by Bit" (2017) dedicates its second chapter to observing behavior through digital traces. Jungherr's Introduction to CSS syllabus covers digital traces before methods like text analysis or network analysis. The reason is simple: if you cannot collect your own data, you are limited to datasets other people built.
 
 This project teaches three complementary collection methods (REST APIs, BigQuery SQL queries, web scraping) and then uses the collected data to answer a substantive research question about reporting bias in conflict datasets. The UCDP and ACLED datasets that dominate the field are themselves built from systematic media monitoring. By collecting humanitarian reports and media coverage independently, I measure the information environment that feeds the conflict data ecosystem.
 
@@ -52,7 +52,7 @@ This project teaches three complementary collection methods (REST APIs, BigQuery
 | ReliefWeb | REST API pipeline | Pending (appname approval) | UN/NGO humanitarian reports |
 | ReliefWeb | Web scraping (BeautifulSoup) | 20 listings | Demonstration of scraping skill |
 
-**Case study:** Ethiopia/Tigray conflict, November 2020 to November 2022. This case maintains portfolio coherence with Projects 1, 2, and 6, and is analytically suitable because the Ethiopian government imposed a communications blackout on Tigray, creating measurable reporting gaps.
+**Case study:** Ethiopia/Tigray conflict, November 2020 to November 2022. This case maintains portfolio coherence with Projects [1](https://github.com/Sezibra/conflict-event-analysis), [2](https://github.com/Sezibra/conflict-text-analysis), and [6](https://github.com/Sezibra/conflict-satellite-damage), and is analytically suitable because the Ethiopian government imposed a communications blackout on Tigray, creating measurable reporting gaps.
 
 ## Methods
 
@@ -77,7 +77,7 @@ Two clear spikes: November 2020 (conflict onset, ~3,400 events) and November 202
 
 ### GDELT Collection: Actor Analysis
 
-"ETHIOPIA" and "ETHIOPIAN" appear as separate actors due to GDELT's automated name extraction, together accounting for ~10,000 events as Actor1. CIVILIAN ranks third among Actor2 entries, consistent with the one-sided violence patterns from Project 1.
+"ETHIOPIA" and "ETHIOPIAN" appear as separate actors due to GDELT's automated name extraction, together accounting for ~10,000 events as Actor1. CIVILIAN ranks third among Actor2 entries, consistent with the one-sided violence patterns from Project [1](https://github.com/Sezibra/conflict-event-analysis).
 
 ![Top actors](figures/gdelt_top_actors.png)
 
@@ -203,5 +203,5 @@ REST API integration (request construction, JSON parsing, pagination, error hand
 | 4 | [Conflict Forecasting with Machine Learning](https://github.com/Sezibra/conflict-forecasting-ml) | Complete |
 | 5 | [Causal Inference for Conflict with ML](https://github.com/Sezibra/conflict-causal-inference) | Complete |
 | 6 | [Satellite Imagery for Conflict Damage Assessment](https://github.com/Sezibra/conflict-satellite-damage) | Complete |
-| 7 | Agent-Based Modeling for Conflict Dynamics | Complete |
+| 7 | [Agent-Based Modeling for Conflict Dynamics](https://github.com/Sezibra/conflict-abm-simulation) | Complete |
 | 8 | **Digital Trace Data Collection** (this repo) | **Complete** |
