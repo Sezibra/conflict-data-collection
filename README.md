@@ -20,13 +20,15 @@
 
 ## Motivation
 
-Projects [1](https://github.com/Sezibra/conflict-event-analysis) through [7](https://github.com/Sezibra/conflict-abm-simulation) in this portfolio all started from existing, pre-compiled datasets: UCDP GED, UN documents, ACLED, Google Earth Engine imagery. None demonstrated the ability to collect raw data from digital sources. Data collection is a foundational CSS skill. Salganik's "Bit by Bit" (2017) dedicates its second chapter to observing behavior through digital traces. Jungherr's Introduction to CSS syllabus covers digital traces before methods like text analysis or network analysis. The reason is simple: if you cannot collect your own data, you are limited to datasets other people built.
+Projects 1 through 7 in this portfolio all started from existing, pre-compiled datasets: UCDP GED, UN documents, ACLED, Google Earth Engine imagery. None demonstrated the ability to collect raw data from digital sources. Data collection is a foundational CSS skill. Salganik's "Bit by Bit" (2017) dedicates its second chapter to observing behavior through digital traces. Jungherr's Introduction to CSS syllabus covers digital traces before methods like text analysis or network analysis. The reason is simple: if you cannot collect your own data, you are limited to datasets other people built.
 
 This project teaches three complementary collection methods (REST APIs, BigQuery SQL queries, web scraping) and then uses the collected data to answer a substantive research question about reporting bias in conflict datasets. The UCDP and ACLED datasets that dominate the field are themselves built from systematic media monitoring. By collecting humanitarian reports and media coverage independently, I measure the information environment that feeds the conflict data ecosystem.
 
 ## Key Findings
 
 **Media attention does not track violence intensity.** UCDP conflict events and GDELT media-reported events are essentially uncorrelated (r = 0.10, p = 0.64). International media coverage follows news cycle dynamics, not battlefield dynamics.
+
+**Humanitarian reporting is far more stable than media coverage.** ReliefWeb reports held between 200 and 350 per month across the entire study period, while GDELT media events swung from 3,400 down to 500. Professional humanitarian organizations (UNHCR, IOM, OCHA) maintained consistent reporting even when news media attention collapsed.
 
 **Four reporting surges identified.** Months where media coverage was disproportionately high relative to recorded violence:
 
@@ -47,21 +49,41 @@ This project teaches three complementary collection methods (REST APIs, BigQuery
 
 | Dataset | Collection Method | Records | Role |
 |---------|------------------|---------|------|
-| UCDP GED v25.1 | Reference dataset ([Project 1](https://github.com/Sezibra/conflict-event-analysis)) | 1,764 events | Ground truth: actual violence in Ethiopia |
+| UCDP GED v25.1 | Reference dataset (Project 1) | 1,764 events | Ground truth: actual violence in Ethiopia |
 | GDELT v2 | Google BigQuery SQL | 30,601 events (after dedup) | Media-reported conflict events |
-| ReliefWeb | REST API pipeline | Pending (appname approval) | UN/NGO humanitarian reports |
+| ReliefWeb | REST API (v2, appname-authenticated) | 6,295 reports | UN/NGO humanitarian reports |
 | ReliefWeb | Web scraping (BeautifulSoup) | 20 listings | Demonstration of scraping skill |
 
-**Case study:** Ethiopia/Tigray conflict, November 2020 to November 2022. This case maintains portfolio coherence with Projects [1](https://github.com/Sezibra/conflict-event-analysis), [2](https://github.com/Sezibra/conflict-text-analysis), and [6](https://github.com/Sezibra/conflict-satellite-damage), and is analytically suitable because the Ethiopian government imposed a communications blackout on Tigray, creating measurable reporting gaps.
+**Case study:** Ethiopia/Tigray conflict, November 2020 to November 2022. This case maintains portfolio coherence with Projects 1, 2, and 6, and is analytically suitable because the Ethiopian government imposed a communications blackout on Tigray, creating measurable reporting gaps.
 
 ## Methods
 
-- **REST API Pipeline (ReliefWeb)**: POST requests with JSON payloads, pagination, exponential backoff retry logic, response parsing into DataFrames. Pipeline built and tested, pending API appname approval.
+- **REST API Pipeline (ReliefWeb)**: POST requests with JSON payloads to the v2 API, pagination through 6,295 reports, exponential backoff retry logic, nested JSON parsing into DataFrames. Authenticated via pre-approved appname.
 - **Google BigQuery (GDELT)**: SQL queries on the `gdelt-bq.gdeltv2.events` public dataset, filtering by FIPS country code and CAMEO conflict event codes (14x, 17x, 18x, 19x, 20x). Service account authentication via JSON key.
 - **Web Scraping (ReliefWeb)**: HTTP requests with BeautifulSoup HTML parsing, adaptive element detection, pagination handling, polite scraping practices (2s delays, descriptive User-Agent, robots.txt compliance).
-- **Integration Analysis**: Monthly time axis alignment, Pearson and Spearman correlation, GDELT-to-UCDP ratio analysis for gap/surge detection, min-max normalized comparison.
+- **Integration Analysis**: Monthly time axis alignment across three sources, Pearson and Spearman correlation, GDELT-to-UCDP ratio analysis for gap/surge detection, min-max normalized comparison.
 
 ## Results in Detail
+
+### ReliefWeb Collection: Monthly Report Volume
+
+6,295 humanitarian reports collected from 292 source organizations. Monthly volume ranges from 186 to 345 reports. The peak in June 2021 coincides with the famine reporting surge and TPLF retaking Mekelle. Unlike GDELT media coverage, ReliefWeb reporting remains relatively stable throughout the study period.
+
+![Monthly volume](figures/reliefweb_monthly_volume.png)
+
+### ReliefWeb Collection: Source Organizations
+
+UNHCR leads with over 1,100 reports, followed by IOM (~600) and OCHA (~400). The top 20 sources include UN agencies (WFP, FAO, WHO, UNICEF), international organizations (ICRC, IOM), and monitoring bodies (Famine Early Warning System Network, Insecurity Insight).
+
+![Top sources](figures/reliefweb_top_sources.png)
+
+### ReliefWeb Collection: Report Types and Themes
+
+News and Press Releases dominate (2,050 reports), followed by Situation Reports (1,370) and Infographics (1,200). "Protection and Human Rights" is the top thematic tag (~4,000 occurrences), followed by Health (~2,500) and Food and Nutrition (~2,500), reflecting the famine conditions documented during the conflict.
+
+![Format types](figures/reliefweb_format_types.png)
+
+![Themes](figures/reliefweb_themes.png)
 
 ### GDELT Collection: Event Type Distribution
 
@@ -77,7 +99,7 @@ Two clear spikes: November 2020 (conflict onset, ~3,400 events) and November 202
 
 ### GDELT Collection: Actor Analysis
 
-"ETHIOPIA" and "ETHIOPIAN" appear as separate actors due to GDELT's automated name extraction, together accounting for ~10,000 events as Actor1. CIVILIAN ranks third among Actor2 entries, consistent with the one-sided violence patterns from Project [1](https://github.com/Sezibra/conflict-event-analysis).
+"ETHIOPIA" and "ETHIOPIAN" appear as separate actors due to GDELT's automated name extraction, together accounting for ~10,000 events as Actor1. CIVILIAN ranks third among Actor2 entries, consistent with the one-sided violence patterns from Project 1.
 
 ![Top actors](figures/gdelt_top_actors.png)
 
@@ -87,9 +109,9 @@ Most events come from a single source (NumSources concentrated at 1). Average to
 
 ![Media metrics](figures/gdelt_media_metrics.png)
 
-### Integration: Multi-Panel Time Series
+### Integration: Three-Panel Time Series
 
-Panel A shows UCDP events and fatalities. Panel B shows GDELT media events and average tone. The two panels reveal distinct dynamics: violence followed military logic (high at onset, lower during the blackout, resurgent in late 2022), while media attention followed news cycle logic (high at onset, high during diplomatic crises, declining over time regardless of violence).
+Panel A shows UCDP events and fatalities. Panel B shows GDELT media events and average tone. Panel C shows ReliefWeb humanitarian reports. Three distinct dynamics emerge: violence followed military logic (high at onset, lower during the blackout, resurgent in late 2022), media attention followed news cycle logic (high at onset, declining regardless of violence), and humanitarian reporting followed an institutional logic (relatively stable, with moderate fluctuations tied to access and crisis milestones).
 
 ![Integrated time series](figures/integrated_timeseries.png)
 
@@ -101,13 +123,13 @@ UCDP events vs. GDELT events: r = 0.10, p = 0.64 (not significant). UCDP fatalit
 
 ### Integration: Reporting Gaps and Surges
 
-The GDELT-to-UCDP ratio identifies months where media coverage was disproportionately high (blue) or low (red) relative to violence levels. Four surge months stand out above the normal range. No formal reporting gaps were detected, though the late-2022 period shows the ratio dropping steadily as violence rises.
+The GDELT-to-UCDP ratio identifies months where media coverage was disproportionately high (blue) relative to violence levels. Four surge months stand out above the normal range. No formal reporting gaps were detected by this metric, though the late-2022 period shows the ratio dropping steadily as violence rises.
 
 ![Gaps and surges](figures/reporting_gaps_surges.png)
 
-### Integration: Normalized Comparison
+### Integration: Normalized Three-Source Comparison
 
-Both series are scaled to 0-1 to compare temporal patterns directly. The purple divergence area highlights where the two sources disagree. The lines converge at conflict onset (Nov 2020) and the TPLF offensive (Nov 2021), but diverge sharply in late 2022 when UCDP violence spikes while GDELT attention fades.
+All three series scaled to 0-1. The purple divergence area highlights where UCDP and GDELT disagree. The green ReliefWeb line sits between the two extremes for most of the study period. The lines converge at conflict onset (Nov 2020) and the TPLF offensive (Nov 2021), but diverge sharply in late 2022 when UCDP violence spikes while both GDELT and ReliefWeb attention decline.
 
 ![Normalized comparison](figures/normalized_comparison.png)
 
@@ -163,10 +185,10 @@ conflict-data-collection/
 
 | Notebook | Description | Key Output |
 |----------|-------------|------------|
-| 01 ReliefWeb API | Build REST API pipeline with pagination, retry logic, JSON parsing | Pipeline complete, pending appname approval |
+| 01 ReliefWeb API | Build REST API pipeline with pagination, retry logic, JSON parsing | 6,295 reports from 292 organizations |
 | 02 GDELT BigQuery | Query GDELT v2 via SQL, filter CAMEO codes, assess data quality | 30,601 events, 47% dedup rate |
 | 03 Web Scraping | Scrape ReliefWeb with BeautifulSoup, handle pagination, polite practices | 20 listings, robots.txt compliant |
-| 04 Integration | Merge UCDP + GDELT on monthly axis, correlation, gap/surge analysis | r = 0.10, 4 reporting surges |
+| 04 Integration | Merge UCDP + GDELT + ReliefWeb on monthly axis, correlation, gap/surge analysis | r = 0.10, 4 reporting surges |
 
 ## How to Reproduce
 
@@ -176,7 +198,7 @@ conflict-data-collection/
 4. Install dependencies: `pip install -r requirements.txt`
 5. Run notebooks in order: 01, 02, 03, 04
 
-Notebook 02 requires Google Cloud authentication and uses the BigQuery free tier (1 TB/month). Notebook 01 requires an approved ReliefWeb appname.
+Notebook 01 requires an approved ReliefWeb appname. Notebook 02 requires Google Cloud authentication and uses the BigQuery free tier (1 TB/month).
 
 ## Key References
 
